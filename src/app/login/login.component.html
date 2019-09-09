@@ -14,7 +14,7 @@
 
     <mat-grid-tile >
       <mat-form-field class="example-full-width">
-        <input matInput placeholder="Password" formControlName="password">
+        <input matInput type="password" placeholder="Password" formControlName="password">
         <mat-error *ngIf="loginForm.get('password').invalid">Please enter valid Password</mat-error>
       </mat-form-field>
     </mat-grid-tile>
@@ -24,11 +24,6 @@
         Sign In 
         <mat-icon aria-hidden="false" class="material-icons">subdirectory_arrow_right</mat-icon>
       </button>
-      <mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon>
-      <mat-icon>clock</mat-icon>
-      <mat-icon>add_shopping_cart</mat-icon>
-
-
     </mat-grid-tile>
   </form>
 </mat-grid-list>
