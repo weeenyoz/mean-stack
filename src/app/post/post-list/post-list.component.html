@@ -1,0 +1,25 @@
+<h4>My Posts</h4>
+
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+
+<mat-accordion multi="true" *ngIf="newPosts.length > 0 && !isLoading">
+  <mat-expansion-panel *ngFor="let post of newPosts">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{post.title}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p> {{post.content}} </p>
+
+    <mat-action-row *ngIf="userIsAuthenticated">
+      <a mat-button color="primary" [routerLink]="['', 'edit', post.id]">EDIT</a> &nbsp;&nbsp;
+      <button mat-button color="warn" (click)="deletePost(post.id)">DELETE</button>
+    </mat-action-row>
+
+  </mat-expansion-panel>
+</mat-accordion>
+
+<p class="info-text mat-body-1" *ngIf="newPosts.length === 0 && !isLoading">No Posts Added Yet</p>

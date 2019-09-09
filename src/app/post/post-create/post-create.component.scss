@@ -1,0 +1,22 @@
+:host {
+   display: block;
+   margin-top: 1rem;
+}
+
+.add-photo{
+   button, input {
+      float: right;
+   }
+
+   input[type="file"] {
+      visibility: hidden;
+   }
+}
+
+mat-form-field, textarea {
+   width: 100%;
+}
+
+mat-spinner {
+   margin: auto;
+}

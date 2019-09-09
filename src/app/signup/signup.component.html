@@ -1,0 +1,56 @@
+<mat-card>
+  <form [formGroup]="signUpForm" (submit)="onSignUp()" *ngIf="!isLoading">
+    <mat-card-title>Sign up</mat-card-title>
+    <mat-card-subtitle color="accent">Lorem ipsum dolor sit amet.</mat-card-subtitle>
+    
+    <mat-card-content>
+      <mat-grid-list cols="4" rowHeight="75px" gutterSize="20px">
+
+        <mat-grid-tile colspan="4" rowspan="1">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>User Name</mat-label>
+            <input matInput formControlName="username">
+            <mat-error *ngIf="signUpForm.get('username').invalid">User Name has to be at least 6 characters*</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4" rowspan="1">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email">
+            <mat-error *ngIf="signUpForm.get('email').invalid">Invalid Email*</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="2" rowspan="1">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName">
+            <mat-error *ngIf="signUpForm.get('firstName').invalid">Invalid First Name*</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="2" rowspan="1">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName">
+            <mat-error *ngIf="signUpForm.get('lastName').invalid">Invalid Last Name*</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="4" rowspan="1">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password">
+            <mat-error *ngIf="signUpForm.get('password').invalid">Invalid Password*</mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+      </mat-grid-list>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary">Sign Up</button>
+    </mat-card-actions>
+  </form>
+</mat-card>
