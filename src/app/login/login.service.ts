@@ -41,7 +41,7 @@ export class LoginService {
           this.tokenTimer = setTimeout(() => { 
             console.log('** User Token Expired, Logging User Out **');
             this.logout();
-          }, expiresIn)
+          }, expiresIn * 1000)
           this.userIsAuthenticated = true;
           this.isUserAuthenticatedListener.next(true);
           this.router.navigate(['', 'list']);
