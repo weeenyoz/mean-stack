@@ -50,10 +50,12 @@ export class PostService {
         postData => {
           const { posts, message } = postData;
           const allPosts = posts.map(post => {
+            const {_id, title, content, creator} = post;
             return {
-              id: post._id,
-              title: post.title,
-              content: post.content
+              id: _id,
+              title: title,
+              content: content,
+              creator: creator
             }
           });
           return {posts: allPosts, message: message};
@@ -86,7 +88,6 @@ export class PostService {
     .subscribe(
       (res: {message: string, updatedPost: Post}) => {
         const { updatedPost } = res;
-        console.log('Updated Post: ', updatedPost);
         const updatedPosts = [...this.posts];
         const oldPostIndex = updatedPosts.findIndex(p => p.id === updatedPost.id);
         updatedPosts[oldPostIndex] = updatedPost;
@@ -99,6 +100,9 @@ export class PostService {
   }
 
   deletPost(postId: string) {
-    return this.http.delete(`${this.backendUrl}/delete/${postId}`);
+    return this.http.delete(`${this.backendUrl}/delete/${postId}`).subscribe(
+      res => console.log('RES * ', res),
+      error => console.log('ERROR * ', error)
+    )
   }
 }

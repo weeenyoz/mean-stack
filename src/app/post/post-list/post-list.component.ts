@@ -37,11 +37,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.userIsAuthenticated = this.loginService.getAuthenticatedStatus();
 
     this.userIsAuthenticatedListenerSubscription = this.loginService.getUserAuthenticationSubject().subscribe(
-      userIsAuthenticated => {
-        console.log(userIsAuthenticated)
-        console.log(this.userIsAuthenticated)
-        this.userIsAuthenticated = userIsAuthenticated;
-      }
+      userIsAuthenticated => this.userIsAuthenticated = userIsAuthenticated
     );
   }
 
@@ -50,14 +46,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   deletePost(postId: string) {
-    this.postService.deletPost(postId).subscribe(
-      res => {
-        this.postService.getPosts();
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    this.postService.deletPost(postId);
   }
 
 
