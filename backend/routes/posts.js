@@ -12,9 +12,12 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/new', authoriseUser, (req, res, next) => {
-   console.log('USER: ', req.user)
    const { title, content } = req.body;
-   const post = new Post({title: title, content: content});
+   const post = new Post({
+      title: title, 
+      content: content,
+      creator: req.user.id
+   });
    post.save().then(createdPost => {
       res.status(201).json({
          message: `Nodejs: A post, ${createdPost}, added successfully :)`,
@@ -52,33 +55,26 @@ router.put('/edit/:id', authoriseUser, async (req, res) => {
       title: title,
       content: content
    });
-   const result = await Post.updateOne({_id: id}, post);
-   if (result) {
-      const { _id, title, content } = post;
-      res.status(200).json({
-         message: 'Post Updated Successfully :)',
-         updatedPost: {
-            id: _id,
-            title: title,
-            content: content
-         }
-      });
+   const result = await Post.updateOne({_id: id, creator: req.user.id}, post);
+   if (result.nModified > 0) {
+      res.status(200).json({message: 'Post Updated Successfully :)'});
    } else {
-      res.status(400).send('Updare Failed :(');
+      res.status(401).send('Update Failed, Unauthorised User');
    }
 });
 
 router.delete('/delete/:id', authoriseUser, (req, res) => {
-   Post.deleteOne({_id: req.params.id}).then(
+   Post.deleteOne({_id: req.params.id, creator: req.user.id}).then(
       result => {
-         res.status(200).send({
-            message: 'Post deleted'
-         });
-      },
-      error => {
-         console.log('Unable to delete: ', error);
+         if (result.n > 0) {
+            res.status(200).send('Post Deleted!');
+         } else {
+            res.status(401).send('Delete Failed, Unauthorised User!');
+         }
       }
-   );
+   ).catch(error => {
+      res.status(500).send('Error Deleting!');
+   })
 });
 
 module.exports = router;
