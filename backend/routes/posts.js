@@ -57,24 +57,23 @@ router.put('/edit/:id', authoriseUser, async (req, res) => {
    });
    const result = await Post.updateOne({_id: id, creator: req.user.id}, post);
    if (result.nModified > 0) {
-      res.status(200).json({message: 'Post Updated Successfully :)'});
+      res.status(200).json({
+         message: 'Post Updated Successfully :)',
+         updatedPost: post
+      });
    } else {
       res.status(401).send('Update Failed, Unauthorised User');
    }
 });
 
 router.delete('/delete/:id', authoriseUser, (req, res) => {
-   Post.deleteOne({_id: req.params.id, creator: req.user.id}).then(
-      result => {
-         if (result.n > 0) {
-            res.status(200).send('Post Deleted!');
-         } else {
-            res.status(401).send('Delete Failed, Unauthorised User!');
-         }
+   Post.deleteOne({_id: req.params.id, creator: req.user.id}).then(result => {
+      if (result.n > 0) {
+         res.status(200).json({message: 'Post Deleted!'});
+      } else {
+         res.status(401).send('Delete Failed, Unauthorised User!');
       }
-   ).catch(error => {
-      res.status(500).send('Error Deleting!');
-   })
+   });
 });
 
 module.exports = router;
