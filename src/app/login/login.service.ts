@@ -12,6 +12,7 @@ export class LoginService {
   private token: string;
   private backendUrl = 'http://localhost:3000/api/auth';
   private userIsAuthenticated: boolean = false;
+  private userId: string;
   private tokenTimer: NodeJS.Timer;
 
   constructor( 
@@ -21,6 +22,10 @@ export class LoginService {
 
   getToken() {
     return this.token;
+  }
+
+  getUserId() {
+    return this.userId;
   }
 
   getAuthenticatedStatus() {
@@ -33,46 +38,52 @@ export class LoginService {
 
   login(password: string, email: string) {
     const credentials = { loginPassword: password, loginEmail: email }
-    return this.http.post<{message: string, token: string, expiresIn: number}>(`${this.backendUrl}/login`, credentials).subscribe(
-      (res: {message: string, token: string, expiresIn: number}) => {
-        const { message, token, expiresIn } = res;
-        this.token = token; 
-        if (token) {
-          this.setLogoutTimer(expiresIn);
-          this.userIsAuthenticated = true;
 
-          // create the expiry date out of the duration which the user can stay logged in
-          const now = new Date();
-          const expiryDate = new Date(now.getTime() + expiresIn * 1000);
-          this.saveAuthTokenData(token, expiryDate);
+    return this.http.post<{message: string, token: string, userId: string, expiresIn: number}>(`${this.backendUrl}/login`, credentials)
+      .subscribe(
+        (res: {message: string, token: string, userId: string, expiresIn: number}) => {
+          const { token, userId, expiresIn } = res;
+          this.token = token; 
+          if (token) {
+            this.setLogoutTimer(expiresIn);
+            this.userIsAuthenticated = true;
 
-          this.isUserAuthenticatedListener.next(true);
-          this.router.navigate(['', 'list']);
-        }
-      },
-      error => console.log(error)
-    );
+            // create the expiry date, using the date from when the user logged in, and out of the duration which the user can stay logged in
+            const now = new Date();
+            const expiryDate = new Date(now.getTime() + expiresIn * 1000);
+            this.saveAuthTokenData(token, expiryDate, userId);
+            this.userId = userId;
+
+            this.isUserAuthenticatedListener.next(true);
+            this.router.navigate(['', 'list']);
+          }
+        },
+        error => console.log(error)
+      );
   }
 
   logout() {
     this.token = null;
     this.userIsAuthenticated = false;
     this.isUserAuthenticatedListener.next(false);
+    this.userId = null;
     clearTimeout(this.tokenTimer);
     this.clearAuthTokenData();
     this.router.navigate(['', 'login']);
   }
 
   // save authenticated user's token data into storage
-  private saveAuthTokenData(token: string, expiryDate: Date) {
+  private saveAuthTokenData(token: string, expiryDate: Date, userId: string) {
     localStorage.setItem('authenticatedUserToken', token);
     localStorage.setItem('tokenExpiryDate', expiryDate.toISOString());
+    localStorage.setItem('user-id', userId);
   }
 
   // clear authenticated user's token data from storage
   private clearAuthTokenData() {
     localStorage.removeItem('authenticatedUserToken');
     localStorage.removeItem('tokenExpiryDate');
+    localStorage.removeItem('user-id');
   }
 
   authoAuthData() {
@@ -103,8 +114,8 @@ export class LoginService {
         // / browser, after user refreshed, that the token is still valid and user can still stay logged in)
 
         const expiryDuration = expDateFromStorage.getTime() - now.getTime(); // milli second
-        console.log(expiryDuration);
         this.token = tokenFromStorage;
+        this.userId = this.getUserId();
         this.userIsAuthenticated = true;
         this.isUserAuthenticatedListener.next(true);
         this.setLogoutTimer(expiryDuration/1000);
@@ -121,6 +132,7 @@ export class LoginService {
   private getTokenData() {
     const token = localStorage.getItem('authenticatedUserToken');
     const expDate = localStorage.getItem('tokenExpiryDate');
+    const userId = localStorage.getItem('user-id');
 
     if (!token || !expDate) {
       // if there's no token / date, the function returns nothing
@@ -128,7 +140,8 @@ export class LoginService {
     } else {
       return {
         tokenFromStorage: token,
-        expDateFromStorage: new Date(expDate)
+        expDateFromStorage: new Date(expDate),
+        userId: userId,
       }
     }
   }

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card color="accent">
   <form [formGroup]="signUpForm" (submit)="onSignUp()" *ngIf="!isLoading">
     <mat-card-title>Sign up</mat-card-title>
     <mat-card-subtitle color="accent">Lorem ipsum dolor sit amet.</mat-card-subtitle>
@@ -53,4 +53,7 @@
       <button mat-raised-button color="primary">Sign Up</button>
     </mat-card-actions>
   </form>
+  <div *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
 </mat-card>

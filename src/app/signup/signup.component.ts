@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { SignupService } from './signup.service';
 
@@ -8,16 +9,26 @@ import { SignupService } from './signup.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
 
+  authenticationStatusSubscription: Subscription
   signUpForm: FormGroup;
   isInconsistentPw: boolean;
+  isLoading: boolean;
 
   constructor(
     private signupService: SignupService
   ) { }
 
   ngOnInit() {
+
+    // start listneing, whether user is signed up
+    this.authenticationStatusSubscription = this.signupService.getUserAuthenticatedStatus().subscribe(
+      (authenticationStatus:boolean) => {
+        this.isLoading = authenticationStatus;
+      }
+    )
+
     this.signUpForm = new FormGroup({
       username: new FormControl('', {validators: [Validators.required, Validators.minLength(6)]}),      
       email: new FormControl('', {validators: [Validators.required, Validators.email, Validators.minLength(3)]}),
@@ -25,21 +36,24 @@ export class SignupComponent implements OnInit {
       lastName: new FormControl('', {validators: [Validators.required]}),
       password: new FormControl('', {validators: [Validators.required, Validators.minLength(6)]})
     });
-    console.log(this.signUpForm.invalid)
+  }
+
+  ngOnDestroy() {
+    this.authenticationStatusSubscription.unsubscribe();
   }
 
   onSignUp() {
     if (this.signUpForm.invalid) {
       return;
     } else {
-      console.log(this.signUpForm.value);
+      this.isLoading = true;
       const { username, email, password } = this.signUpForm.value;
       const newUser = {
         newUsername: username,
         newEmail: email,
         newPassword: password
       }
-      console.log(this.signupService.createUser(newUser));
+      this.signupService.createUser(newUser);
       this.signUpForm.reset();
     }
   }

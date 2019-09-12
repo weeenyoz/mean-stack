@@ -11,7 +11,8 @@ import {
   MatFormFieldModule,
   MatProgressSpinnerModule,
   MatGridListModule,
-  MatIconModule
+  MatIconModule,
+  MatDialogModule
 } from '@angular/material/';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +25,8 @@ import { PostListComponent } from './post/post-list/post-list.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
+import { ErrorInterceptor } from './error-interceptor';
+import { ErrorComponent } from './error-component/error.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,8 @@ import { SignupComponent } from './signup/signup.component';
     PostListComponent,
     LoginComponent,
     HomeComponent,
-    SignupComponent
+    SignupComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -49,11 +53,14 @@ import { SignupComponent } from './signup/signup.component';
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatGridListModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent]
 })
 export class AppModule { }
