@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Post } from './post.model';
-import { LoginService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +18,10 @@ export class PostService {
 
   constructor( 
     private http: HttpClient, 
-    private router: Router,
-    private loginService: LoginService
+    private router: Router
   ) { }
 
-  // listen to the subject
+  // listen to post created subject
   getPostCreatedListener() {
     return this.postUpdated.asObservable();
   }
@@ -101,7 +99,9 @@ export class PostService {
 
   deletPost(postId: string) {
     return this.http.delete(`${this.backendUrl}/delete/${postId}`).subscribe(
-      res => console.log('RES * ', res),
+      res => {
+        this.getPosts();
+      },
       error => console.log('ERROR * ', error)
     )
   }

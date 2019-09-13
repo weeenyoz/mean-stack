@@ -33,7 +33,6 @@ export class PostListComponent implements OnInit, OnDestroy {
       posts => {
         this.isLoading = false;
         this.newPosts = posts;
-        console.log(this.newPosts);
       }
     );
 
