@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class LoginService {
 
   private isUserAuthenticatedListener = new Subject<boolean>();
   private token: string;
-  private backendUrl = 'http://localhost:3000/api/auth';
+  private backendUrl: string = environment.apiUrl + 'auth';
   private userIsAuthenticated: boolean = false;
   private userId: string;
   private tokenTimer: NodeJS.Timer;
@@ -88,43 +89,42 @@ export class LoginService {
 
   authoAuthData() {
 
-      // on init the app has to remember that the user is still logged in
-      // hence, we need to refresh the app's memory: 
-      // each time the app refreshes / when the user refreshes the browser,
-      // we check if the token's expired or not
+    // on init the app has to remember that the user is still logged in
+    // hence, we need to refresh the app's memory: 
+    // each time the app refreshes / when the user refreshes the browser,
+    // we check if the token's expired or not
 
-      // retrieve the token from the storage, check if the token has expired. 
-      if (!this.getTokenData()) {
-        return;
-      }
-      const { tokenFromStorage, expDateFromStorage } = this.getTokenData();
+    // retrieve the token from the storage, check if the token has expired. 
+    if (!this.getTokenData()) {
+      return;
+    }
+    const { tokenFromStorage, expDateFromStorage } = this.getTokenData();
 
-      // if token's expiry date is earlier than current date, then it has expired
-      const now = new Date();
-      const userLoginDurationExpired: boolean = expDateFromStorage < now;
-      if (userLoginDurationExpired) {
-        this.logout();
-      } else {
-        // This Process is just like what we do (to set this.userIsAuthenticated = true etc) when user has just logged in.
-        
-        // else if token's exipry date is later than current date, then it hasn't expired yet.
-        // else if not expired, keep user logged in:
-        // re-append the token from storage (which has yet to expire) to this.tokem,
-        // set userIsAuthenticated to true as well, as like when user just logged in. (we're reminding the app 
-        // / browser, after user refreshed, that the token is still valid and user can still stay logged in)
+    // if token's expiry date is earlier than current date, then it has expired
+    const now = new Date();
+    const userLoginDurationExpired: boolean = expDateFromStorage < now;
+    if (userLoginDurationExpired) {
+      this.logout();
+    } else {
+      // This Process is just like what we do (to set this.userIsAuthenticated = true etc) when user has just logged in.
+      
+      // else if token's exipry date is later than current date, then it hasn't expired yet.
+      // else if not expired, keep user logged in:
+      // re-append the token from storage (which has yet to expire) to this.tokem,
+      // set userIsAuthenticated to true as well, as like when user just logged in. (we're reminding the app 
+      // / browser, after user refreshed, that the token is still valid and user can still stay logged in)
 
-        const expiryDuration = expDateFromStorage.getTime() - now.getTime(); // milli second
-        this.token = tokenFromStorage;
-        this.userId = this.getUserId();
-        this.userIsAuthenticated = true;
-        this.isUserAuthenticatedListener.next(true);
-        this.setLogoutTimer(expiryDuration/1000);
-      }    
+      const expiryDuration = expDateFromStorage.getTime() - now.getTime(); // milli second
+      this.token = tokenFromStorage;
+      this.userId = this.getUserId();
+      this.userIsAuthenticated = true;
+      this.isUserAuthenticatedListener.next(true);
+      this.setLogoutTimer(expiryDuration/1000);
+    }    
   }
 
   private setLogoutTimer(expiryDuration: number) { // second
     this.tokenTimer = setTimeout(() => { 
-      console.log('** User Token Expired, Logging User Out **');
       this.logout();
     }, expiryDuration * 1000); // set time out only uses milli seconds
   }

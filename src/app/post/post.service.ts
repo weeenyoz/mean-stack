@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Post } from './post.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class PostService {
   private postUpdated = new Subject<Post[]>();
   private posts: Post[] = [];
 
-  private backendUrl: String = 'http://localhost:3000/api/posts';
+  private backendUrl: String = environment.apiUrl + 'posts';
 
   constructor( 
     private http: HttpClient, 

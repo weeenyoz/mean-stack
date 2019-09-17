@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignupService {
 
-  private backendUrl = 'http://localhost:3000/api/users';
   private userAuthenticatedSubjectListener = new Subject();
+  private backendUrl: String = environment.apiUrl + 'users';
 
   constructor(
     private http: HttpClient,

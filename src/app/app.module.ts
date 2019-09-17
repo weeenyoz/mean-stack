@@ -1,20 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
-import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AppComponent } from './app.component';
-import { AuthInterceptor } from './shared-modules/auth-interceptor';
-import { HeaderComponent } from './header/header.component';
-import { HomeComponent } from './home/home.component';
-import { ErrorInterceptor } from './error-interceptor';
-import { ErrorComponent } from './error-component/error.component';
-import { LoginModule } from './login/login.module';
+import { AppRoutingModule } from './app-routing.module';
 import { PostsModule } from './post/post.module';
 import { AngularMaterialModule } from './angular-material.module';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
+import { ErrorComponent } from './error-component/error.component';
+import { AuthInterceptor } from './shared-modules/auth-interceptor';
+import { ErrorInterceptor } from './error-interceptor';
 
 @NgModule({
   declarations: [
@@ -25,13 +23,12 @@ import { AngularMaterialModule } from './angular-material.module';
   ],
   imports: [
     BrowserModule,
-    ReactiveFormsModule,
-    LoginModule,
-    PostsModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AngularMaterialModule
+    ReactiveFormsModule,
+    AngularMaterialModule,
+    PostsModule,
+    AppRoutingModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
