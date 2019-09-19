@@ -1,16 +1,8 @@
 :host {
    display: block;
    margin-top: 1rem;
-}
-
-.add-photo{
-   button, input {
-      float: right;
-   }
-
-   input[type="file"] {
-      visibility: hidden;
-   }
+   width: 80%;
+   margin: auto;
 }
 
 mat-form-field, textarea {
@@ -19,4 +11,17 @@ mat-form-field, textarea {
 
 mat-spinner {
    margin: auto;
+}
+
+input[type="file"] {
+   visibility: hidden;
+}
+
+.image-preview {
+   height: 5rem;
+   margin: 1rem 0;
+}
+
+.image-preview img {
+   height: 100%; 
 }

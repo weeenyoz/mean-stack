@@ -70,7 +70,7 @@ export class LoginService {
     this.userId = null;
     clearTimeout(this.tokenTimer);
     this.clearAuthTokenData();
-    this.router.navigate(['', 'login']);
+    this.router.navigate(['auth', 'login']);
   }
 
   // save authenticated user's token data into storage
@@ -89,15 +89,15 @@ export class LoginService {
 
   authoAuthData() {
 
-    // on init the app has to remember that the user is still logged in
-    // hence, we need to refresh the app's memory: 
-    // each time the app refreshes / when the user refreshes the browser,
-    // we check if the token's expired or not
+    // on init the app has to remember that the user is still logged in or not.
+    // we do so by refreshing the app's memory,
+    // each time the app re-loads / when the user re-loads the browser - 
 
     // retrieve the token from the storage, check if the token has expired. 
-    if (!this.getTokenData()) {
+    if (!this.getTokenData()) { // if token doesn't exists
       return;
-    }
+    } 
+    // if token exists
     const { tokenFromStorage, expDateFromStorage } = this.getTokenData();
 
     // if token's expiry date is earlier than current date, then it has expired

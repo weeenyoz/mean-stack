@@ -24,7 +24,7 @@ export class SignupService {
   createUser(newUser) {
     return this.http.post<{message: string, user: any}>(`${this.backendUrl}/signup`, newUser).subscribe(
       (res: {message: string, user: any}) => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['auth', 'login']);
         return res;
       }, 
       error => {

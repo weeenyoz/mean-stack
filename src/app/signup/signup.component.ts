@@ -22,7 +22,7 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    // start listneing, whether user is signed up
+    // start listening, whether user is signed up
     this.authenticationStatusSubscription = this.signupService.getUserAuthenticatedStatus().subscribe(
       (authenticationStatus:boolean) => {
         this.isLoading = authenticationStatus;
