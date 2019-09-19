@@ -1,15 +1,15 @@
 <mat-toolbar color="primary">
-   <a routerLink="home"> My App </a>
+   <a class="bloop-header" routerLink="home"> My App </a>
    <span class="space"></span>
    <ul>
       <li *ngIf="userIsAuthenticated">
          <a mat-button routerLink="/create" routerLinkActive="mat-accent"> New Post </a>
       </li>
       <li *ngIf="!userIsAuthenticated">
-         <a mat-button routerLink="/login" routerLinkActive="mat-accent"> Log in </a>
+         <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent"> Log in </a>
       </li>
       <li *ngIf="!userIsAuthenticated">
-         <a mat-button routerLink="/signup" routerLinkActive="mat-accent"> Signup </a>
+         <a mat-button routerLink="/auth/signup" routerLinkActive="mat-accent"> Signup </a>
       </li>
       <li *ngIf="userIsAuthenticated">
          <a mat-button routerLink="/list" routerLinkActive="mat-accent"> My Posts </a>

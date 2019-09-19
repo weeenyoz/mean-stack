@@ -17,6 +17,7 @@ export class PostCreateComponent implements OnInit {
   isEdit: boolean;
   editPostId: string;
   isLoading: boolean = false;
+  imagePreview: string; 
 
   postForm: FormGroup;
 
@@ -30,9 +31,10 @@ export class PostCreateComponent implements OnInit {
       title: new FormControl('', {
         validators: [Validators.required, Validators.minLength(3)]
       }),
-      content: new FormControl('',{
+      content: new FormControl('', {
         validators: [Validators.required]
-      })
+      }),
+      imageUrl: new FormControl('')
     });
     
     this.activatedRoute.params.subscribe(
@@ -57,6 +59,19 @@ export class PostCreateComponent implements OnInit {
         }
       }
     );
+  }
+
+  onImagePicked(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.postForm.patchValue({
+      imageUrl: file
+    });
+    this.postForm.get('imageUrl').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    }
+    reader.readAsDataURL(file);
   }
 
   onSavePost() {
